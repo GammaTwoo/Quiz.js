@@ -1,0 +1,25 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+header {
+    width: fit-content;
+    z-index: 1;
+}
+
+main {
+    display: flex;
+    flex-flow: column wrap;
+    position: absolute;
+    top: 20%;
+    align-self: center;
+    text-align: center;
+    margin: 0;
+}
+
+ul {
+    display: flex;
+    flex-flow: column wrap;
+}
