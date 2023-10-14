@@ -38,6 +38,12 @@ button {
     padding: 0.5em;
     border-radius: 0.5em;
     cursor: pointer;
+    transition: 0.3s;
+    filter:brightness(100%)
+}
+
+button:hover {
+    filter:brightness(110%)
 }
 
 a {
