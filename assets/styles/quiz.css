@@ -10,13 +10,15 @@ h1 {
     border-bottom: 1px solid grey;
 }
 
-p {
+p { /* i thought this was unnecessaey but when i commented it out everything broke */ 
     padding: 0;
     margin: 0;
 }
 
 header {
+    /* to interact less with other elements */
     width: fit-content;
+    /* just in case */
     z-index: 1;
     color: white;
 }
@@ -24,26 +26,30 @@ header {
 main {
     display: flex;
     flex-flow: column wrap;
-    position: absolute;
+    /* to place it right in the middle (visually) of the page */
+    position: absolute; 
     top: 20%;
     align-self: center;
+    /**/
     text-align: center;
     margin: 0;
     background-color: white;
     padding: 2rem;
-    border-radius: 1em;
+    border-radius: 1rem;
 }
 
-label, ul, span {
+/* unsetting all default styles so i have more control of the way things look */
+label, ul {
     all: unset;
 }
 
 ul {
     display: flex;
     flex-flow: column wrap;
-    align-content: flex-start
+    align-content: flex-start;
 }
 
+/* Styles for the different options for a given question */
 label {
     margin: 0.5rem
 }
@@ -61,7 +67,10 @@ button {
 }
 
 .optn-ltr {
-    margin: 0 0.5rem ;
+    margin: 0 0.5rem;
+    /* so it slides to the center during the animation */
+    justify-self: center;
+    flex: 1; /* idk it worked */
 }
 
 .btn-anim {
@@ -69,22 +78,30 @@ button {
     background-color: deepskyblue;
     color: white;
     border-radius: 0 0.5rem 0.5rem 0;
+
+    /* these 3 are so the animation goes smoothly without looking wonkey */
     overflow: hidden;
     white-space: nowrap;
     width: 100%;
-    margin-left: auto;
+
+    margin-left: auto; /* so that it slides off from left to right instead of right to left */
 }
 
+/* Animation makes the option button slide out from left to right */
 @keyframes slideout {
     from {
         width: 100%;
     }
     to {
         width: 0;
-        visibility: hidden;
+        visibility: hidden; /* otherwise it leaves a sliver of the object */
     }
 }
 
+/* self explanatory? */
 button:hover .btn-anim {
-    animation:  0.3s linear forwards slideout;
+    animation:  0.3s linear /* looks better */ forwards  slideout;
 }
+/* "forwards" made the animation state reset after mouse off 
+instead of animation complete, not sure if 
+thats the intended purpose but its what i wanted */
