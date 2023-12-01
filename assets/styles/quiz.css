@@ -38,6 +38,16 @@ main {
     border-radius: 1rem;
 }
 
+section {
+    position: absolute;
+    color: white;
+    text-align: center;
+    /* a bit higher than the center looks better */
+    top: 45%;
+    /* putting 100% causes a scroll bar to appear on the bottom? */
+    width: 99%;
+}
+
 /* unsetting all default styles so i have more control of the way things look */
 label, ul {
     all: unset;
