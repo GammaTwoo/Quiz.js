@@ -6,6 +6,13 @@ let currentQuestionIndex = 0
 let userScore = 0
 let elapsedTime = 0
 let intervalId
+let existingScoreArray;
+
+try {
+    existingScoreArray = JSON.parse(localStorage.getItem('scores')) || [];
+} catch (error) {
+    existingScoreArray = [];
+}
 // i didnt want to do it this way but i couldnt figure out how to load the JSON file for the life of me
 let quizData = [
     {
@@ -88,6 +95,7 @@ function showQuestion() {
         listItem.textContent = option
         listItem.addEventListener('click', () => selectOption(index)) 
         optionsElement.appendChild(listItem)
+    document.removeEventListener('keydown', keydownHandler)
 })
 }
 
@@ -112,12 +120,59 @@ async function nextQuestion() {
     }
 }
 
+function localStorageHandler(initials, score, time) {
+    let userData = {
+        "initials": `${initials}`,
+        "score": `${score}/10`,
+        "time": `${time}`
+    };
+    existingScoreArray.push(userData);
+
+    // Convert the array to a JSON string before storing in local storage
+    localStorage.setItem('scores', JSON.stringify(existingScoreArray))
+
+    window.history.pushState(null, null, '../../index.html')
+}
+
+function scoreSaver(score, time) {
+    btnYes.removeEventListener('click', () => scoreSaver(score, time))
+
+    btnNo.removeEventListener('click', () => {
+        window.history.pushState(null, null, '../../index.html')
+    })
+
+    form.innerHTML = `
+        <h1>Enter your initials below to save your score of ${score}/10 in ${time}</h1>
+        <input type="text" id="initialInput" name="initialInput" placeholder="Initial Here"
+        maxlength="3" pattern="[A-Za-z]{1,3}" title="Enter up to 3 alphabetical characters">
+        <button id="initialSubmit">Submit</button>
+    `
+    let initialInput = document.getElementById('initialInput')
+    let initialSubmit = document.getElementById('initialSubmit')
+    initialSubmit.addEventListener('click', () => localStorageHandler(initialInput.value, score, time))
+}
+
 function formHandler(score, time) {
     let form = document.createElement('form')
-    let headerEl = document.createElement('h1')
-    let scoreEl = document.createElement('p')
-    let initialInput = document.createElement('input')
-    let submitButton = document.createElement('button')
+        form.classList.add('form')
+        form.id = 'form'
+
+    form.innerHTML = `
+        <h1>Would you like to save your score?</h1>
+        <p>You got ${score}/10 questions correct in ${time} seconds</p>
+        <button id="btnYes">Yes</button>
+        <button id="btnNo">No</button>
+        `
+    document.body.appendChild(form)
+    
+    let btnYes = document.getElementById('btnYes')
+    let btnNo = document.getElementById('btnNo')
+    
+    btnYes.addEventListener('click', () => scoreSaver(score, time))
+
+    btnNo.addEventListener('click', () => {
+        window.history.pushState(null, null, '../../index.html')
+    })
 }
 
 function clearHandler() {
@@ -162,7 +217,7 @@ async function updateCountdown() {
     // i used a for loop and a promise based setTimeout so i didnt have to use setTimeout 3 times. ie, less clunky code and arguably easier to update/troubleshoot if necessary
 }
 
-document.addEventListener('keydown', () => {
+const keydownHandler = () => {
     let countdownPrompt = document.getElementById('prompt')
 
     countdownPrompt.remove()
@@ -176,7 +231,9 @@ document.addEventListener('keydown', () => {
         startStopwatch(),
         showQuestion()
     })
-})
+}
+
+document.addEventListener('keydown', keydownHandler)
 
 
 
