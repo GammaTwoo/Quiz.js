@@ -13,6 +13,7 @@ try {
 } catch (error) {
     existingScoreArray = [];
 }
+
 // i didnt want to do it this way but i couldnt figure out how to load the JSON file for the life of me
 let quizData = [
     {
@@ -66,22 +67,18 @@ let quizData = [
       "correctAnswer": "Object"
     }
 ]
+// what an ugly block of object text in the middle of my beautiful code
 
-// making setTimeout promise based so i can use it in the for loop and have intended results
+/***** Utility *****/
+
+// Promise-based setTimeout so I can execute the quiz after the countdown without having to hard code timings into it
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-// shuffles the questions into a new array so they appear in a random order
-function shuffleArray(array) {
-    const shuffledArray = [...array]
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
-    }
-    return shuffledArray
-}
+/***** Quiz Logic *****/
 
+// clears old question if its there, and puts the new question in its place
 function showQuestion() {
     const questionElement = document.getElementById('question')
     const optionsElement = document.getElementById('options')
@@ -99,6 +96,7 @@ function showQuestion() {
 })
 }
 
+// checks to see if the selected option was correct. increments score if so
 function selectOption(index) {
     const currentQuestion = quizData[currentQuestionIndex]
     const selectedOption = currentQuestion.options[index]
@@ -110,6 +108,7 @@ function selectOption(index) {
     nextQuestion()
 }
 
+// increments the current question index, checks if its less than the total amount of questions. if it is, shows next question. if not, ends quiz
 async function nextQuestion() {
     currentQuestionIndex++;
 
@@ -120,6 +119,9 @@ async function nextQuestion() {
     }
 }
 
+/***** Local Storage/Data Handling *****/
+
+// takes the results from the quiz and pushes it to the scores array. puts the scores array in local storage and then switches to the home screen
 function localStorageHandler(initials, score, time) {
     let userData = {
         "initials": `${initials}`,
@@ -128,12 +130,12 @@ function localStorageHandler(initials, score, time) {
     };
     existingScoreArray.push(userData);
 
-    // Convert the array to a JSON string before storing in local storage
     localStorage.setItem('scores', JSON.stringify(existingScoreArray))
 
     window.history.pushState(null, null, '../../index.html')
 }
 
+// removes old event listeners, then creates a form so that you can enter your initials to save your score
 function scoreSaver(score, time) {
     btnYes.removeEventListener('click', () => scoreSaver(score, time))
 
@@ -152,6 +154,9 @@ function scoreSaver(score, time) {
     initialSubmit.addEventListener('click', () => localStorageHandler(initialInput.value, score, time))
 }
 
+/***** UI Functions *****/
+
+// shows your score and asks if you want to save it to the leaderboard
 function formHandler(score, time) {
     let form = document.createElement('form')
         form.classList.add('form')
@@ -175,7 +180,8 @@ function formHandler(score, time) {
     })
 }
 
-function clearHandler() {
+// clears the quiz elements to make room for the form stuff
+function quizRemover() {
     while (document.body.firstChild) {
         document.body.firstChild.remove(document.body.firstChild)
     }
@@ -183,12 +189,15 @@ function clearHandler() {
     formHandler(userScore, elapsedTime)
 }
 
+/***** Quiz Lifecycle functions *****/
+
+// stops the timer and calls the quiz remover
 function endQuiz() {
     clearInterval(intervalId)
-    clearHandler()
+    quizRemover()
 }
 
-// handles the stopwatch to keep time
+// starts the timer
 function startStopwatch() {
         let startTime = new Date().getTime()
         let timer = document.getElementById('timer')
@@ -201,7 +210,7 @@ function startStopwatch() {
         }, 1000)
 }
 
-// counts down to the start of the quiz
+// starts the quiz after a dramatic "ready, set, go" screen
 async function updateCountdown() {
     let countdown = document.getElementById('countdown')
     let screens = [ 
@@ -214,9 +223,13 @@ async function updateCountdown() {
         countdown.textContent = screens[i]
         await delay(1000)
     }
-    // i used a for loop and a promise based setTimeout so i didnt have to use setTimeout 3 times. ie, less clunky code and arguably easier to update/troubleshoot if necessary
 }
 
+/***** Event listener/handler *****/
+
+// removes the prompt to make way for the countdown, then starts the countdown
+// once the countdown is complete, it removes the involved elements
+// once that is complete, it calls startStopwatch and showQuestion to start the quiz
 const keydownHandler = () => {
     let countdownPrompt = document.getElementById('prompt')
 
@@ -233,67 +246,5 @@ const keydownHandler = () => {
     })
 }
 
+// adds the event listener to trigger the quiz. any keyboard button will start the quiz (normal ones at least)
 document.addEventListener('keydown', keydownHandler)
-
-
-
-/*
-Press any button to continue
-
-Ready?
-
-Set
-
-Go!
-
-on page load,  start a timer (probably count up instead of count down)
-
-    timer = on
-
-load questions from quiz.json
-
-    const questionAmount = 10
-    let array = 1-50
-    shuffle array
-    i = 0-9
-    parse JSON per question for arr[i] where arr[i]+1=question number
-
-then, display first question
-
-    document body = (
-        question = '' => an empty string for later question
-        a ''
-        b ''
-        c ''
-        d ''
-    )
-
-
-answering questions will display the next question, regardless of right or wrong
-
-    add event listener class option
-    await click?
-    on click, parse json for next question
-
-keep track of right/10
-
-    let correctAnswrs = 0
-    if (correct) { return correctAnswers = correctAnswers+1 } else { timer+1 }
-
-answering wrong will add 1 second to the timer
-
-at the end, store time, #/10, and allow a name (probably and initial) to be added, into local storage as a JSON object
-
-    document body = (
-        input textarea
-        submit button
-    )
-
-    name = textarea.value()
-
-    to local storage => name {
-        "correctOfTen":`${correctAnswers}/10`
-        "time":`${time}` => in seconds to the nearest hundredth
-    }
-
-*/
