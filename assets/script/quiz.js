@@ -165,8 +165,10 @@ function formHandler(score, time) {
     form.innerHTML = `
         <h1>Would you like to save your score?</h1>
         <p>You got ${score}/10 questions correct in ${time} seconds</p>
-        <button id="btnYes">Yes</button>
-        <button id="btnNo">No</button>
+        <div class="button-container">
+            <button id="btnYes">Yes</button>
+            <button id="btnNo">No</button>
+        </div>
         `
     document.body.appendChild(form)
     
@@ -239,6 +241,9 @@ const keydownHandler = () => {
         let promptContainer = document.getElementById('promptContainer')
 
         promptContainer.remove()
+
+        const quizContainer = document.getElementById('quizContainer')
+        quizContainer.classList.remove('hidden')
 
     }).then(() => {
         startStopwatch(),

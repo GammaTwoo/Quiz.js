@@ -7,4 +7,80 @@ body {
     height: 100vh;
     background-color: #08234A;
     margin: 0;
+    color: white;
+}
+
+div {
+    background-color: white;
+    color: black;
+    padding: 2rem;
+    padding-left: 1rem;
+    width: 35%;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+ul {
+    text-align: left;
+    list-style-type: none;
+    margin: 0;
+}
+
+li {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background-color: deepskyblue;
+    border-radius: 0.25rem;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    filter:brightness(100%);
+}
+
+li:hover {
+    filter:brightness(110%);
+}
+
+.form {
+    display: flex;
+    flex-flow: column wrap;
+    background-color: white;
+    color: black;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    width: 85%;
+    justify-content: space-around;
+}
+
+.form button {
+    border: none;
+    background-color: deepskyblue;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: 0.3s;
+    filter:brightness(100%);
+}
+
+.form button:hover {
+    filter:brightness(110%);
+}
+
+input {
+    margin: 1rem;
+    border-radius: 0.25rem;
+    border-color: gray;
+    border: 2px;
+    height: 2rem;
+    font-size: 1.25rem;
 }
