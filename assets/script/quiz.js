@@ -132,7 +132,7 @@ function localStorageHandler(initials, score, time) {
 
     localStorage.setItem('scores', JSON.stringify(existingScoreArray))
 
-    window.history.pushState(null, null, '../../')
+    window.location.href = '../../index.html'
 }
 
 // removes old event listeners, then creates a form so that you can enter your initials to save your score
@@ -140,7 +140,7 @@ function scoreSaver(score, time) {
     btnYes.removeEventListener('click', () => scoreSaver(score, time))
 
     btnNo.removeEventListener('click', () => {
-        window.history.pushState(null, null, '../../')
+        window.location.href = '../../index.html'
     })
 
     form.innerHTML = `
