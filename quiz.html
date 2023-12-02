@@ -7,37 +7,17 @@
     <link rel="stylesheet" href="./assets/styles/quiz.css">
 </head>
 <body>
-    <header id="timer"></header>
+    <section id="timer"></section>
+
     <section class="prompt" id="promptContainer">
         <h2 id="countdown"></h2>
         <p id="prompt">Press any button to continue</p>
     </section>
 
-    <!-- Code until next comment is temporary for visualization purposes. Will be put in w/ JS later on 
-    <header>Sample Timer</header>
-
-    <main>
-        <h1>Sample Question plus a bunch of text to simulate a long question</h1>
-
-        <ul class="choices">
-            <label for="a">
-                <button value="a" id="a" class="option"> <p class="optn-ltr">A</p> <p class="btn-anim">Sample Option</p></button>
-            </label>
-
-            <label for="b">
-                <button value="b" id="b" class="option"> <p class="optn-ltr">B</p> <p class="btn-anim">Sample Option</p></button>
-            </label>
-
-            <label for="c">
-                <button value="c" id="c" class="option"> <p class="optn-ltr">C</p> <p class="btn-anim">Sample Option with extra length</p></button>
-            </label>
-
-            <label for="d">
-                <button value="d" id="d" class="option"> <p class="optn-ltr">D</p> <p class="btn-anim">Sample Option</p></button>
-            </label>
-        </ul>
-    </main>
-    Close sample code -->
+    <div id="quizContainer" class="quiz-container">
+        <h1 class="question" id="question"></h1>
+        <ul class="options" id="options"></ul>
+    </div>
 
     <script src="./assets/script/quiz.js"></script>
 </body>

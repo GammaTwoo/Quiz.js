@@ -4,6 +4,9 @@
 
 let currentQuestionIndex = 0
 let userScore = 0
+let elapsedTime = 0
+let intervalId
+// i didnt want to do it this way but i couldnt figure out how to load the JSON file for the life of me
 let quizData = [
     {
       "question": "What does JS stand for?",
@@ -62,13 +65,88 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+// shuffles the questions into a new array so they appear in a random order
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+    const shuffledArray = [...array]
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
+    }
+    return shuffledArray
+}
+
+function showQuestion() {
+    const questionElement = document.getElementById('question')
+    const optionsElement = document.getElementById('options')
+    const currentQuestion = quizData[currentQuestionIndex]
+
+    questionElement.textContent = currentQuestion.question
+
+    optionsElement.innerHTML = ""
+    currentQuestion.options.forEach((option, index) => {
+        const listItem = document.createElement('li')
+        listItem.textContent = option
+        listItem.addEventListener('click', () => selectOption(index)) 
+        optionsElement.appendChild(listItem)
+})
+}
+
+function selectOption(index) {
+    const currentQuestion = quizData[currentQuestionIndex]
+    const selectedOption = currentQuestion.options[index]
+
+    if (selectedOption === currentQuestion.correctAnswer) {
+        userScore++
+    }
+
+    nextQuestion()
+}
+
+async function nextQuestion() {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < quizData.length) {
+        showQuestion();
+    } else {
+        endQuiz();
     }
 }
 
+function formHandler(score, time) {
+    let form = document.createElement('form')
+    let headerEl = document.createElement('h1')
+    let scoreEl = document.createElement('p')
+    let initialInput = document.createElement('input')
+    let submitButton = document.createElement('button')
+}
+
+function clearHandler() {
+    while (document.body.firstChild) {
+        document.body.firstChild.remove(document.body.firstChild)
+    }
+
+    formHandler(userScore, elapsedTime)
+}
+
+function endQuiz() {
+    clearInterval(intervalId)
+    clearHandler()
+}
+
+// handles the stopwatch to keep time
+function startStopwatch() {
+        let startTime = new Date().getTime()
+        let timer = document.getElementById('timer')
+
+        intervalId = setInterval(() => {
+        const currentTime = new Date().getTime()
+        elapsedTime = Math.floor((currentTime - startTime) / 1000)
+    
+        timer.textContent = elapsedTime
+        }, 1000)
+}
+
+// counts down to the start of the quiz
 async function updateCountdown() {
     let countdown = document.getElementById('countdown')
     let screens = [ 
@@ -84,63 +162,20 @@ async function updateCountdown() {
     // i used a for loop and a promise based setTimeout so i didnt have to use setTimeout 3 times. ie, less clunky code and arguably easier to update/troubleshoot if necessary
 }
 
-function startStopwatch() {
-    setTimeout(() => {
-        let startTime = new Date().getTime();
-        let timer = document.getElementById('timer')
-
-        setInterval(() => {
-        const currentTime = new Date().getTime();
-        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-    
-        timer.textContent = elapsedTime;
-        }, 1000);
-    }, 3000)
-  }
-
 document.addEventListener('keydown', () => {
     let countdownPrompt = document.getElementById('prompt')
 
     countdownPrompt.remove()
+
     updateCountdown().then(() => {
         let promptContainer = document.getElementById('promptContainer')
+
         promptContainer.remove()
+
     }).then(() => {
-        const main = document.createElement('main')
-        const titleEl = document.createElement('h1')
-        const choiceUl = document.createElement('ul')  
-            choiceUl.classList.add('choices')
-        let options = ['a','b','c','d']
-
-        for (let i = 0 ; i < options.length ; i++ ) {
-
-            let option = document.createElement('label')
-                option.setAttribute('for', `${[i]}`)
-
-            let optionButton = document.createElement('button')
-                optionButton.setAttribute('value', `${[i]}`)
-                optionButton.id = `${[i]}`
-                optionButton.classList.add('option')
-
-            let optionLetter = document.createElement('p')
-                optionLetter.classList.add('optn-ltr')
-                optionLetter.textContent = `${options[i].toUpperCase()}`
-
-            let question = document.createElement('p')
-                question.classList.add('btn-anim')
-                question.id = 'question'
-
-            optionButton.appendChild(optionLetter)
-            optionButton.appendChild(question)
-            option.appendChild(optionButton)
-            choiceUl.appendChild(option)
-        }
-        main.appendChild(titleEl)
-        main.appendChild(choiceUl)
-        document.body.appendChild(main)
-    }).then(
-        startStopwatch()
-    )
+        startStopwatch(),
+        showQuestion()
+    })
 })
 
 
