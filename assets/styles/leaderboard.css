@@ -8,3 +8,17 @@ body {
     background-color: #08234A;
     margin: 0;
 }
+
+h1 {
+    color: white;
+}
+
+table {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+td {
+    padding: 0.5rem 1rem;
+}
